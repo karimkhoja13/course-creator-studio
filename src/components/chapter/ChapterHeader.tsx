@@ -53,8 +53,8 @@ export function ChapterHeader({
 
   return (
     <>
-      <div className="p-4 flex items-center gap-3">
-        <button onClick={onToggle} className="text-fluid-text-muted">
+      <div className="px-2 py-2 flex items-center gap-2">
+        <button onClick={onToggle} className="text-fluid-text-muted scale-90">
           {isExpanded ? <Icons.ChevronDown /> : <Icons.ChevronRight />}
         </button>
 
@@ -70,11 +70,11 @@ export function ChapterHeader({
               onBlur={handleTitleSave}
               onKeyDown={handleTitleKeyDown}
               autoFocus
-              className="w-full text-lg font-semibold text-fluid-text-primary bg-[rgba(255,255,255,0.05)] px-2 py-1 rounded border border-fluid-cyan focus:outline-none focus:border-fluid-cyan"
+              className="w-full text-base font-semibold text-fluid-text-primary bg-[rgba(255,255,255,0.05)] px-2 py-0.5 rounded border border-fluid-cyan focus:outline-none focus:border-fluid-cyan"
             />
           ) : (
             <h3
-              className="text-lg font-semibold text-fluid-text-primary cursor-pointer hover:text-fluid-cyan transition-colors"
+              className="text-base font-semibold text-fluid-text-primary cursor-pointer hover:text-fluid-cyan transition-colors"
               onClick={() => setIsEditingTitle(true)}
               title="Click to edit title"
             >
@@ -83,13 +83,13 @@ export function ChapterHeader({
           )}
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-fluid-text-muted">
+        <div className="flex items-center gap-1.5 text-[11px] text-fluid-text-muted">
           <span>{totalUnits} units</span>
           <span>•</span>
           <span>{totalAssessments} assessments</span>
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 scale-90">
           <IconButton
             icon={<Icons.Edit />}
             onClick={() => setIsEditing(true)}
@@ -107,9 +107,9 @@ export function ChapterHeader({
 
       {/* Learning Objective */}
       {isExpanded && (
-        <div className="px-4 pb-4">
-          <div className="flex items-center gap-2 text-fluid-text-muted text-sm">
-            <Icons.Target />
+        <div className="px-2 pb-2">
+          <div className="flex items-center gap-2 text-fluid-text-muted text-xs">
+            <Icons.Target className="scale-90" />
             <span>Objective: {chapter.learningObjective}</span>
           </div>
         </div>

@@ -13,7 +13,7 @@ export function UnitList({ chapterId, units }: UnitListProps) {
   const [isAddingUnit, setIsAddingUnit] = useState(false)
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {units.map((unit) => (
         <UnitItem key={unit.id} chapterId={chapterId} unit={unit} />
       ))}
@@ -21,9 +21,9 @@ export function UnitList({ chapterId, units }: UnitListProps) {
       {/* Add Unit Button */}
       <button
         onClick={() => setIsAddingUnit(true)}
-        className="w-full py-2.5 border-2 border-dashed border-[rgba(255,255,255,0.08)] rounded-lg text-fluid-text-muted hover:border-[rgba(255,255,255,0.15)] hover:text-fluid-text-primary transition-all flex items-center justify-center gap-2 text-sm"
+        className="w-full py-1.5 border-2 border-dashed border-[rgba(255,255,255,0.08)] rounded-lg text-fluid-text-muted hover:border-[rgba(255,255,255,0.15)] hover:text-fluid-text-primary transition-all flex items-center justify-center gap-2 text-xs"
       >
-        <Icons.Plus />
+        <Icons.Plus className="scale-90" />
         Add Unit
       </button>
 

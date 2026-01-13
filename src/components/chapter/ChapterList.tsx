@@ -9,7 +9,7 @@ export function ChapterList() {
   const [isAddingChapter, setIsAddingChapter] = useState(false)
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {chapters.map((chapter, index) => (
         <ChapterItem key={chapter.id} chapter={chapter} index={index} />
       ))}
