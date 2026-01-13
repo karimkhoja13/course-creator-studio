@@ -15,12 +15,23 @@ import {
 } from '../utils/courseHelpers'
 
 /**
+ * History entry for undo/redo
+ */
+interface HistoryEntry {
+  course: CourseManifest
+}
+
+/**
  * Course store state interface
  */
-interface CourseState {
+export interface CourseState {
   course: CourseManifest
   selectedChapterId: number | null
   selectedUnitId: number | null
+
+  // Undo/Redo history
+  past: HistoryEntry[]
+  future: HistoryEntry[]
 
   // Chapter actions
   addChapter: (chapter: Omit<Chapter, 'id' | 'units' | 'fluidDefense'>) => void
@@ -82,22 +93,43 @@ interface CourseState {
       Omit<CourseManifest, 'id' | 'chapters' | 'speakers' | 'northStar'>
     >
   ) => void
+
+  // Undo/Redo actions
+  undo: () => void
+  redo: () => void
+  clearHistory: () => void
 }
 
 /**
- * Create the course store
+ * Helper to save current state to history before making a change
+ */
+const saveToHistory = (get: () => CourseState): Partial<CourseState> => {
+  const currentCourse = get().course
+  const past = get().past
+
+  return {
+    past: [...past.slice(-49), { course: currentCourse }], // Keep last 50 states
+    future: [], // Clear future when making a new change
+  }
+}
+
+/**
+ * Create the course store with custom undo/redo
  */
 export const useCourseStore = create<CourseState>()(
   devtools(
-    subscribeWithSelector((set) => ({
+    subscribeWithSelector((set, get) => ({
       // Initial state
       course: initialCourse,
       selectedChapterId: null,
       selectedUnitId: null,
+      past: [],
+      future: [],
 
       // Chapter actions
       addChapter: (chapter) =>
         set((state) => ({
+          ...saveToHistory(get),
           course: {
             ...state.course,
             chapters: [
@@ -114,6 +146,7 @@ export const useCourseStore = create<CourseState>()(
 
       updateChapter: (chapterId, updates) =>
         set((state) => ({
+          ...saveToHistory(get),
           course: {
             ...state.course,
             chapters: updateNestedItem(
@@ -129,6 +162,7 @@ export const useCourseStore = create<CourseState>()(
 
       deleteChapter: (chapterId) =>
         set((state) => ({
+          ...saveToHistory(get),
           course: {
             ...state.course,
             chapters: deleteNestedItem(state.course.chapters, chapterId),
@@ -141,7 +175,7 @@ export const useCourseStore = create<CourseState>()(
 
       // Unit actions
       addUnit: (chapterId, unit) =>
-        set((state) => ({
+        set((state) => ({...saveToHistory(get),
           course: {
             ...state.course,
             chapters: updateNestedItem(
@@ -163,7 +197,7 @@ export const useCourseStore = create<CourseState>()(
         })),
 
       updateUnit: (chapterId, unitId, updates) =>
-        set((state) => ({
+        set((state) => ({...saveToHistory(get),
           course: {
             ...state.course,
             chapters: updateNestedItem(
@@ -181,7 +215,7 @@ export const useCourseStore = create<CourseState>()(
         })),
 
       deleteUnit: (chapterId, unitId) =>
-        set((state) => ({
+        set((state) => ({...saveToHistory(get),
           course: {
             ...state.course,
             chapters: updateNestedItem(
@@ -199,7 +233,7 @@ export const useCourseStore = create<CourseState>()(
 
       // Attachment actions
       addAttachment: (chapterId, unitId, attachment) =>
-        set((state) => ({
+        set((state) => ({...saveToHistory(get),
           course: {
             ...state.course,
             chapters: updateNestedItem(
@@ -223,7 +257,7 @@ export const useCourseStore = create<CourseState>()(
         })),
 
       updateAttachment: (chapterId, unitId, attachmentId, updates) =>
-        set((state) => ({
+        set((state) => ({...saveToHistory(get),
           course: {
             ...state.course,
             chapters: updateNestedItem(
@@ -248,7 +282,7 @@ export const useCourseStore = create<CourseState>()(
         })),
 
       deleteAttachment: (chapterId, unitId, attachmentId) =>
-        set((state) => ({
+        set((state) => ({...saveToHistory(get),
           course: {
             ...state.course,
             chapters: updateNestedItem(
@@ -270,7 +304,7 @@ export const useCourseStore = create<CourseState>()(
 
       // FluidDefense actions
       addFluidDefense: (chapterId, defense) =>
-        set((state) => ({
+        set((state) => ({...saveToHistory(get),
           course: {
             ...state.course,
             chapters: updateNestedItem(
@@ -291,7 +325,7 @@ export const useCourseStore = create<CourseState>()(
         })),
 
       updateFluidDefense: (chapterId, defenseId, updates) =>
-        set((state) => ({
+        set((state) => ({...saveToHistory(get),
           course: {
             ...state.course,
             chapters: updateNestedItem(
@@ -313,7 +347,7 @@ export const useCourseStore = create<CourseState>()(
         })),
 
       deleteFluidDefense: (chapterId, defenseId) =>
-        set((state) => ({
+        set((state) => ({...saveToHistory(get),
           course: {
             ...state.course,
             chapters: updateNestedItem(
@@ -338,12 +372,45 @@ export const useCourseStore = create<CourseState>()(
 
       // Course metadata actions
       updateCourseMetadata: (updates) =>
-        set((state) => ({
+        set((state) => ({...saveToHistory(get),
           course: {
             ...state.course,
             ...updates,
           },
         })),
+
+      // Undo/Redo actions
+      undo: () => {
+        const { past, future, course } = get()
+        if (past.length === 0) return
+
+        const previous = past[past.length - 1]
+        const newPast = past.slice(0, past.length - 1)
+
+        set({
+          past: newPast,
+          future: [{ course }, ...future],
+          course: previous.course,
+        })
+      },
+
+      redo: () => {
+        const { past, future, course } = get()
+        if (future.length === 0) return
+
+        const next = future[0]
+        const newFuture = future.slice(1)
+
+        set({
+          past: [...past, { course }],
+          future: newFuture,
+          course: next.course,
+        })
+      },
+
+      clearHistory: () => {
+        set({ past: [], future: [] })
+      },
     }))
   )
 )

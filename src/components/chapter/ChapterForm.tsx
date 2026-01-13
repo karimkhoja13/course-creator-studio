@@ -11,14 +11,14 @@ interface ChapterFormProps {
 }
 
 export function ChapterForm({ isOpen, onClose, chapter }: ChapterFormProps) {
-  const course = useCourseStore((state) => state.course)
+  const course = useCourseStore((state) => state?.course)
   const addChapter = useCourseStore((state) => state.addChapter)
   const updateChapter = useCourseStore((state) => state.updateChapter)
 
   const [formData, setFormData] = useState({
     title: '',
     learningObjective: '',
-    sequenceOrder: course.chapters.length + 1,
+    sequenceOrder: (course?.chapters?.length || 0) + 1,
     endCodeState: '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -36,12 +36,12 @@ export function ChapterForm({ isOpen, onClose, chapter }: ChapterFormProps) {
       setFormData({
         title: '',
         learningObjective: '',
-        sequenceOrder: course.chapters.length + 1,
+        sequenceOrder: (course?.chapters?.length || 0) + 1,
         endCodeState: '',
       })
     }
     setErrors({})
-  }, [chapter, course.chapters.length, isOpen])
+  }, [chapter, course?.chapters?.length, isOpen])
 
   const handleSubmit = () => {
     const validation = validateChapter(formData, course, chapter?.id)

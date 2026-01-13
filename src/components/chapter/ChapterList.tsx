@@ -5,7 +5,7 @@ import { ChapterForm } from './ChapterForm'
 import { Icons } from '../icons/Icons'
 
 export function ChapterList() {
-  const chapters = useCourseStore((state) => state.course.chapters)
+  const chapters = useCourseStore((state) => state?.course?.chapters || [])
   const [isAddingChapter, setIsAddingChapter] = useState(false)
 
   return (

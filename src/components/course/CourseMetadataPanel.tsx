@@ -3,8 +3,13 @@ import { Icons } from '../icons/Icons'
 import { useCourseStore } from '../../store/courseStore'
 
 export function CourseMetadataPanel() {
-  const course = useCourseStore((state) => state.course)
+  const course = useCourseStore((state) => state?.course)
   const [isExpanded, setIsExpanded] = useState(false)
+
+  // Safety check - if course is undefined, don't render
+  if (!course) {
+    return null
+  }
 
   if (!isExpanded) {
     return (
