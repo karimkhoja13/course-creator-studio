@@ -16,7 +16,7 @@ export function FluidDefenseSection({
   const [isAddingDefense, setIsAddingDefense] = useState(false)
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {fluidDefense.map((defense) => (
         <FluidDefenseItem
           key={defense.id}
@@ -28,9 +28,9 @@ export function FluidDefenseSection({
       {/* Add Assessment Button */}
       <button
         onClick={() => setIsAddingDefense(true)}
-        className="w-full py-1.5 border-2 border-dashed border-[rgba(255,255,255,0.08)] rounded-lg text-fluid-text-muted hover:border-[rgba(255,255,255,0.15)] hover:text-fluid-text-primary transition-all flex items-center justify-center gap-2 text-xs"
+        className="w-full py-2.5 border-2 border-dashed border-[rgba(255,255,255,0.08)] rounded-lg text-fluid-text-muted hover:border-[rgba(255,255,255,0.15)] hover:text-fluid-text-primary transition-all flex items-center justify-center gap-2 text-sm"
       >
-        <Icons.Plus className="scale-90" />
+        <Icons.Plus />
         Add Assessment
       </button>
 

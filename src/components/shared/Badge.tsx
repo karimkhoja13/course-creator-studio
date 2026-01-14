@@ -17,7 +17,7 @@ export function Badge({ children, variant = 'secondary' }: BadgeProps) {
 
   return (
     <span
-      className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${variantClasses[variant]}`}
+      className={`px-2 py-1 rounded text-xs font-semibold ${variantClasses[variant]}`}
     >
       {children}
     </span>
