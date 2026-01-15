@@ -15,14 +15,22 @@ export function CourseMetadataPanel() {
 
   if (!isExpanded) {
     return (
-      <div className="px-6 py-3">
-        <button
-          onClick={() => setIsExpanded(true)}
-          className="flex items-center gap-2 text-sm text-fluid-text-muted hover:text-fluid-text-primary transition-colors"
-        >
-          <Icons.ChevronRight />
-          <span>Course Metadata</span>
-        </button>
+      <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)]">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setIsExpanded(true)}
+            className="flex items-center gap-2 text-sm text-fluid-text-muted hover:text-fluid-text-primary transition-colors"
+          >
+            <Icons.ChevronRight />
+            <span>Course Metadata</span>
+          </button>
+          <button
+            className="invisible flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[rgba(45,212,191,0.1)] text-fluid-cyan"
+          >
+            <Icons.Edit />
+            <span className="text-sm">Edit</span>
+          </button>
+        </div>
       </div>
     )
   }

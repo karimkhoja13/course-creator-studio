@@ -65,7 +65,7 @@ export const Icons = {
   ),
   ChevronRight: ({ className = '' }: IconProps = {}) => (
     <svg
-      className={`w-3 h-3 ${className}`}
+      className={`w-4 h-4 ${className}`}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
