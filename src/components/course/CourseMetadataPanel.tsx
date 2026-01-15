@@ -54,7 +54,7 @@ export function CourseMetadataPanel() {
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="ml-6 space-y-4">
         {/* Course Title */}
         <div>
           <h2 className="text-xl font-semibold text-fluid-text-primary mb-2">
