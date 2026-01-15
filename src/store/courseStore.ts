@@ -89,9 +89,7 @@ export interface CourseState {
 
   // Course metadata actions
   updateCourseMetadata: (
-    updates: Partial<
-      Omit<CourseManifest, 'id' | 'chapters' | 'speakers' | 'northStar'>
-    >
+    updates: Partial<Omit<CourseManifest, 'id' | 'chapters'>>
   ) => void
 
   // Undo/Redo actions

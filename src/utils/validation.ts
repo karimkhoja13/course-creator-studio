@@ -228,3 +228,107 @@ export function validateFluidDefense(
       }
   }
 }
+
+/**
+ * Validate course metadata
+ */
+export function validateCourseMetadata(
+  metadata: Partial<CourseManifest>
+): ValidationResult {
+  const errors: Record<string, string> = {}
+
+  // Basic Information
+  if (!metadata.title || metadata.title.trim() === '') {
+    errors.title = 'Title is required'
+  }
+
+  if (!metadata.description || metadata.description.trim() === '') {
+    errors.description = 'Description is required'
+  }
+
+  // Repository
+  if (!metadata.repository) {
+    errors.repository = 'Repository information is required'
+  } else {
+    if (!metadata.repository.repoUrl || metadata.repository.repoUrl.trim() === '') {
+      errors.repoUrl = 'Repository URL is required'
+    }
+    if (!metadata.repository.branch || metadata.repository.branch.trim() === '') {
+      errors.branch = 'Branch is required'
+    }
+    if (
+      !metadata.repository.devContainerConfigUrl ||
+      metadata.repository.devContainerConfigUrl.trim() === ''
+    ) {
+      errors.devContainerConfigUrl = 'Dev Container Config URL is required'
+    }
+  }
+
+  // Speakers
+  if (!metadata.speakers || metadata.speakers.length === 0) {
+    errors.speakers = 'At least one speaker is required'
+  } else {
+    metadata.speakers.forEach((speaker, index) => {
+      if (!speaker.name || speaker.name.trim() === '') {
+        errors[`speaker_${index}_name`] = `Speaker ${index + 1} name is required`
+      }
+      if (!speaker.personality || speaker.personality.trim() === '') {
+        errors[`speaker_${index}_personality`] =
+          `Speaker ${index + 1} personality is required`
+      }
+    })
+  }
+
+  // North Star
+  if (!metadata.northStar) {
+    errors.northStar = 'North Star information is required'
+  } else {
+    if (
+      !metadata.northStar.targetAudience ||
+      metadata.northStar.targetAudience.trim() === ''
+    ) {
+      errors.targetAudience = 'Target audience is required'
+    }
+    if (
+      !metadata.northStar.prerequisites ||
+      metadata.northStar.prerequisites.trim() === ''
+    ) {
+      errors.prerequisites = 'Prerequisites are required'
+    }
+    if (
+      !metadata.northStar.transformationDescription ||
+      metadata.northStar.transformationDescription.trim() === ''
+    ) {
+      errors.transformationDescription = 'Transformation description is required'
+    }
+    if (
+      !metadata.northStar.gapAndFriction ||
+      metadata.northStar.gapAndFriction.trim() === ''
+    ) {
+      errors.gapAndFriction = 'Gap and friction description is required'
+    }
+
+    // Capstone Project
+    if (!metadata.northStar.capstoneProject) {
+      errors.capstoneProject = 'Capstone project is required'
+    } else {
+      if (
+        !metadata.northStar.capstoneProject.title ||
+        metadata.northStar.capstoneProject.title.trim() === ''
+      ) {
+        errors.capstoneTitle = 'Capstone project title is required'
+      }
+      if (
+        !metadata.northStar.capstoneProject.description ||
+        metadata.northStar.capstoneProject.description.trim() === ''
+      ) {
+        errors.capstoneDescription = 'Capstone project description is required'
+      }
+    }
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+  }
+}

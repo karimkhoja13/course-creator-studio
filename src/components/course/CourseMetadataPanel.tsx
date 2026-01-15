@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Icons } from '../icons/Icons'
 import { useCourseStore } from '../../store/courseStore'
+import { CourseMetadataForm } from './CourseMetadataForm'
 
 export function CourseMetadataPanel() {
   const course = useCourseStore((state) => state?.course)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   // Safety check - if course is undefined, don't render
   if (!course) {
@@ -27,13 +29,22 @@ export function CourseMetadataPanel() {
 
   return (
     <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)]">
-      <button
-        onClick={() => setIsExpanded(false)}
-        className="flex items-center gap-2 text-sm text-fluid-text-muted hover:text-fluid-text-primary transition-colors mb-4"
-      >
-        <Icons.ChevronDown />
-        <span>Course Metadata</span>
-      </button>
+      <div className="flex items-center justify-between mb-4">
+        <button
+          onClick={() => setIsExpanded(false)}
+          className="flex items-center gap-2 text-sm text-fluid-text-muted hover:text-fluid-text-primary transition-colors"
+        >
+          <Icons.ChevronDown />
+          <span>Course Metadata</span>
+        </button>
+        <button
+          onClick={() => setIsEditModalOpen(true)}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[rgba(45,212,191,0.1)] text-fluid-cyan hover:bg-[rgba(45,212,191,0.15)] transition-colors"
+        >
+          <Icons.Edit />
+          <span className="text-sm">Edit</span>
+        </button>
+      </div>
 
       <div className="space-y-4">
         {/* Course Title */}
@@ -45,17 +56,32 @@ export function CourseMetadataPanel() {
         </div>
 
         {/* Repository */}
-        <div className="flex items-center gap-2 text-sm">
-          <Icons.Code />
-          <a
-            href={course.repository.repoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-fluid-cyan hover:underline"
-          >
-            {course.repository.repoUrl}
-          </a>
-          <span className="text-fluid-text-muted">({course.repository.branch})</span>
+        <div>
+          <div className="text-xs text-fluid-text-muted uppercase tracking-wider mb-2">
+            Repository
+          </div>
+          <div className="space-y-1.5 text-sm">
+            <div className="flex items-center gap-2">
+              <Icons.Code />
+              <a
+                href={course.repository.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-fluid-cyan hover:underline"
+              >
+                {course.repository.repoUrl}
+              </a>
+              <span className="text-fluid-text-muted">
+                ({course.repository.branch})
+              </span>
+            </div>
+            <div>
+              <span className="text-fluid-text-muted">Dev Container: </span>
+              <span className="text-fluid-text-primary">
+                {course.repository.devContainerConfigUrl}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Speakers */}
@@ -82,6 +108,12 @@ export function CourseMetadataPanel() {
           </div>
           <div className="space-y-2 text-sm">
             <div>
+              <span className="text-fluid-text-muted">Transformation: </span>
+              <span className="text-fluid-text-primary">
+                {course.northStar.transformationDescription}
+              </span>
+            </div>
+            <div>
               <span className="text-fluid-text-muted">Target Audience: </span>
               <span className="text-fluid-text-primary">
                 {course.northStar.targetAudience}
@@ -93,9 +125,30 @@ export function CourseMetadataPanel() {
                 {course.northStar.prerequisites}
               </span>
             </div>
+            <div>
+              <span className="text-fluid-text-muted">Gap & Friction: </span>
+              <span className="text-fluid-text-primary">
+                {course.northStar.gapAndFriction}
+              </span>
+            </div>
+            <div className="pt-2 border-t border-[rgba(255,255,255,0.03)]">
+              <span className="text-fluid-text-muted">Capstone: </span>
+              <span className="text-fluid-text-primary font-medium">
+                {course.northStar.capstoneProject.title}
+              </span>
+              <p className="text-fluid-text-muted text-xs mt-1">
+                {course.northStar.capstoneProject.description}
+              </p>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      <CourseMetadataForm
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+      />
     </div>
   )
 }
