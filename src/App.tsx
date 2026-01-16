@@ -179,8 +179,6 @@ const IconsOld = {
 
 // Header Component
 function Header() {
-  const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor')
-
   return (
     <header className="h-14 bg-fluid-bg-surface flex items-center justify-between px-4 shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
       <div className="flex items-center gap-3">
@@ -191,31 +189,6 @@ function Header() {
         <span className="text-xs text-fluid-text-muted bg-fluid-bg-elevated px-2 py-0.5 rounded">
           v2.4.1
         </span>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <div className="flex bg-fluid-bg-elevated rounded-full p-1">
-          <button
-            onClick={() => setActiveTab('editor')}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
-              activeTab === 'editor'
-                ? 'bg-fluid-bg-surface text-fluid-text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_8px_rgba(0,0,0,0.2)]'
-                : 'text-fluid-text-muted hover:text-fluid-text-primary'
-            }`}
-          >
-            Editor
-          </button>
-          <button
-            onClick={() => setActiveTab('preview')}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
-              activeTab === 'preview'
-                ? 'bg-fluid-bg-surface text-fluid-text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_8px_rgba(0,0,0,0.2)]'
-                : 'text-fluid-text-muted hover:text-fluid-text-primary'
-            }`}
-          >
-            Preview
-          </button>
-        </div>
       </div>
 
       <div className="flex items-center gap-3">
