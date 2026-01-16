@@ -22,12 +22,18 @@ interface HistoryEntry {
 }
 
 /**
+ * View selection type - either course overview or a specific chapter
+ */
+export type SelectedView = 'overview' | { type: 'chapter'; chapterId: number }
+
+/**
  * Course store state interface
  */
 export interface CourseState {
   course: CourseManifest
   selectedChapterId: number | null
   selectedUnitId: number | null
+  selectedView: SelectedView
 
   // Undo/Redo history
   past: HistoryEntry[]
@@ -86,6 +92,7 @@ export interface CourseState {
   // Selection actions
   setSelectedChapter: (chapterId: number | null) => void
   setSelectedUnit: (unitId: number | null) => void
+  setSelectedView: (view: SelectedView) => void
 
   // Course metadata actions
   updateCourseMetadata: (
@@ -121,6 +128,7 @@ export const useCourseStore = create<CourseState>()(
       course: initialCourse,
       selectedChapterId: null,
       selectedUnitId: null,
+      selectedView: 'overview' as SelectedView,
       past: [],
       future: [],
 
@@ -159,17 +167,28 @@ export const useCourseStore = create<CourseState>()(
         })),
 
       deleteChapter: (chapterId) =>
-        set((state) => ({
-          ...saveToHistory(get),
-          course: {
-            ...state.course,
-            chapters: deleteNestedItem(state.course.chapters, chapterId),
-          },
-          selectedChapterId:
-            state.selectedChapterId === chapterId
-              ? null
-              : state.selectedChapterId,
-        })),
+        set((state) => {
+          // Check if the deleted chapter is currently selected in the view
+          const isViewingDeletedChapter =
+            state.selectedView !== 'overview' &&
+            state.selectedView.chapterId === chapterId
+
+          return {
+            ...saveToHistory(get),
+            course: {
+              ...state.course,
+              chapters: deleteNestedItem(state.course.chapters, chapterId),
+            },
+            selectedChapterId:
+              state.selectedChapterId === chapterId
+                ? null
+                : state.selectedChapterId,
+            // Reset to overview if the deleted chapter was being viewed
+            selectedView: isViewingDeletedChapter
+              ? 'overview'
+              : state.selectedView,
+          }
+        }),
 
       // Unit actions
       addUnit: (chapterId, unit) =>
@@ -367,6 +386,8 @@ export const useCourseStore = create<CourseState>()(
         set({ selectedChapterId: chapterId }),
 
       setSelectedUnit: (unitId) => set({ selectedUnitId: unitId }),
+
+      setSelectedView: (view) => set({ selectedView: view }),
 
       // Course metadata actions
       updateCourseMetadata: (updates) =>

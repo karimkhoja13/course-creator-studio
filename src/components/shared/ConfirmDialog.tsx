@@ -1,5 +1,3 @@
-import { Icons } from '../icons/Icons'
-
 interface ConfirmDialogProps {
   isOpen: boolean
   onConfirm: () => void
