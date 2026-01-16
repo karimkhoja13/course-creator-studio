@@ -16,22 +16,13 @@ export function CourseMetadataPanel() {
   return (
     <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)]">
       {/* Header - Always visible */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="flex items-center gap-2 text-sm text-fluid-text-muted hover:text-fluid-text-primary transition-colors"
         >
           {isExpanded ? <Icons.ChevronDown /> : <Icons.ChevronRight />}
           <span>Course Metadata</span>
-        </button>
-        <button
-          onClick={() => setIsEditModalOpen(true)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[rgba(45,212,191,0.1)] text-fluid-cyan hover:bg-[rgba(45,212,191,0.15)] transition-colors ${
-            isExpanded ? '' : 'invisible'
-          }`}
-        >
-          <Icons.Edit />
-          <span className="text-sm">Edit</span>
         </button>
       </div>
 
@@ -41,9 +32,18 @@ export function CourseMetadataPanel() {
           <div className="ml-6 space-y-4 mt-4">
             {/* Course Title */}
             <div>
-              <h2 className="text-xl font-semibold text-fluid-text-primary mb-2">
-                {course.title}
-              </h2>
+              <div className="flex items-center gap-2 mb-2">
+                <h2 className="text-xl font-semibold text-fluid-text-primary">
+                  {course.title}
+                </h2>
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[rgba(45,212,191,0.1)] text-fluid-cyan hover:bg-[rgba(45,212,191,0.15)] transition-colors"
+                >
+                  <Icons.Edit />
+                  <span className="text-sm">Edit</span>
+                </button>
+              </div>
               <p className="text-sm text-fluid-text-muted">{course.description}</p>
             </div>
 
