@@ -3,6 +3,7 @@ import type { Chapter } from '../../types/course'
 import { ChapterHeader } from './ChapterHeader'
 import { UnitList } from '../unit/UnitList'
 import { FluidDefenseSection } from '../fluidDefense/FluidDefenseSection'
+import { Icons } from '../icons/Icons'
 
 interface ChapterItemProps {
   chapter: Chapter
@@ -24,8 +25,16 @@ export function ChapterItem({ chapter, index }: ChapterItemProps) {
           onToggle={() => setIsExpanded(!isExpanded)}
         />
 
-        {isExpanded && (
-          <>
+        <div className={`chapter-expandable-content ${isExpanded ? 'expanded' : ''}`}>
+          <div>
+            {/* Learning Objective */}
+            <div className="px-4 pt-4 pb-6 border-t border-[rgba(255,255,255,0.05)]">
+              <div className="flex items-center gap-2 text-fluid-text-muted text-sm">
+                <Icons.Target />
+                <span>Objective: {chapter.learningObjective}</span>
+              </div>
+            </div>
+
             {/* Units */}
             <div className="px-4 py-6 border-t border-[rgba(255,255,255,0.05)]">
               <div className="flex items-center gap-4 mb-6">
@@ -52,8 +61,8 @@ export function ChapterItem({ chapter, index }: ChapterItemProps) {
                 fluidDefense={chapter.fluidDefense}
               />
             </div>
-          </>
-        )}
+          </div>
+        </div>
     </div>
   )
 }

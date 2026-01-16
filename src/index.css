@@ -60,6 +60,48 @@ body {
   background: rgba(255, 255, 255, 0.25);
 }
 
+/* ============================================
+   Smooth Scrollbar Transitions - Strategy C
+   ============================================ */
+
+/* Course Canvas scrollable container */
+.smooth-scroll-container {
+  /* Reserve scrollbar space to prevent layout shift */
+  scrollbar-gutter: stable;
+
+  /* Smooth any remaining shifts with transitions */
+  transition: padding-right 400ms cubic-bezier(0.4, 0, 0.2, 1),
+              margin-right 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Hint to browser for optimization */
+  will-change: padding-right, margin-right;
+}
+
+/* Chapter expandable content animation */
+.chapter-expandable-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 400ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chapter-expandable-content.expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.chapter-expandable-content > * {
+  overflow: hidden;
+}
+
+/* ============================================
+   Strategy Switching Reference:
+   - Strategy A (Always Show): Change smooth-scroll-container to overflow-y: scroll
+   - Strategy B (Overlay): Remove transitions, keep scrollbar-gutter
+   - Strategy C (Current): Keep as-is
+   ============================================ */
+
 /* Animations */
 @keyframes pulse-glow {
   0%,

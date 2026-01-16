@@ -105,16 +105,6 @@ export function ChapterHeader({
         </div>
       </div>
 
-      {/* Learning Objective */}
-      {isExpanded && (
-        <div className="px-4 pb-4">
-          <div className="flex items-center gap-2 text-fluid-text-muted text-sm">
-            <Icons.Target />
-            <span>Objective: {chapter.learningObjective}</span>
-          </div>
-        </div>
-      )}
-
       {/* Edit Modal */}
       <ChapterForm
         isOpen={isEditing}
