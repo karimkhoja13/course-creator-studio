@@ -4,6 +4,18 @@ import type { SelectedView } from '../../store/courseStore'
 import { Icons } from '../icons/Icons'
 import { ChapterForm } from '../chapter/ChapterForm'
 
+/**
+ * DROPDOWN STYLE SELECTOR
+ * ========================
+ * Switch between two dropdown variations anytime by changing this value:
+ *
+ * - 'enhanced': Minimal change with subtle "View:" label, brighter chevron, improved hover states
+ * - 'conventional': Traditional dropdown look with "NAVIGATE" label, stronger background, inset shadow
+ *
+ * Just change the value below and save - hot reload will show the new style instantly!
+ */
+const DROPDOWN_STYLE: 'enhanced' | 'conventional' = 'enhanced'
+
 export function ViewSelector() {
   const course = useCourseStore((state) => state.course)
   const selectedView = useCourseStore((state) => state.selectedView)
@@ -54,24 +66,61 @@ export function ViewSelector() {
   return (
     <div className="relative" ref={dropdownRef}>
       {/* Dropdown Trigger */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.05)] hover:border-[rgba(255,255,255,0.12)] transition-all"
-      >
-        <div className="flex items-center gap-3">
-          {selectedView === 'overview' ? (
-            <Icons.BookOpen className="text-fluid-cyan" />
-          ) : (
-            <Icons.Folder className="text-fluid-cyan" />
-          )}
-          <span className="text-fluid-text-primary font-medium">
-            {getCurrentLabel()}
-          </span>
-        </div>
-        <Icons.ChevronDown
-          className={`text-fluid-text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`}
-        />
-      </button>
+      {DROPDOWN_STYLE === 'conventional' ? (
+        /* VARIATION 1: Enhanced Indicators - Minimal change with brighter chevron and subtle label */
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="group w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.15)] transition-all cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-xs uppercase tracking-wider text-fluid-text-muted">
+              View:
+            </span>
+            {selectedView === 'overview' ? (
+              <Icons.BookOpen className="text-fluid-cyan" />
+            ) : (
+              <Icons.Folder className="text-fluid-cyan" />
+            )}
+            <span className="text-fluid-text-primary font-medium">
+              {getCurrentLabel()}
+            </span>
+          </div>
+          <Icons.ChevronDown
+            className={`w-5 h-5 transition-all ${
+              isOpen
+                ? 'rotate-180 text-fluid-cyan'
+                : 'text-fluid-text-primary group-hover:text-fluid-cyan'
+            }`}
+          />
+        </button>
+      ) : (
+        /* VARIATION 2: Conventional Dropdown - Traditional select appearance with stronger visual cues */
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.12)] hover:bg-[rgba(255,255,255,0.1)] hover:border-[rgba(255,255,255,0.18)] shadow-[inset_0_1px_3px_rgba(0,0,0,0.2)] transition-all cursor-pointer"
+        >
+          <div className="flex flex-col items-start gap-1 flex-1">
+            <span className="text-[10px] uppercase tracking-wider text-fluid-text-muted font-semibold">
+              Navigate
+            </span>
+            <div className="flex items-center gap-2">
+              {selectedView === 'overview' ? (
+                <Icons.BookOpen className="text-fluid-cyan w-4 h-4" />
+              ) : (
+                <Icons.Folder className="text-fluid-cyan w-4 h-4" />
+              )}
+              <span className="text-fluid-text-primary font-medium">
+                {getCurrentLabel()}
+              </span>
+            </div>
+          </div>
+          <Icons.ChevronDown
+            className={`w-5 h-5 flex-shrink-0 transition-all ${
+              isOpen ? 'rotate-180 text-fluid-cyan' : 'text-fluid-text-primary'
+            }`}
+          />
+        </button>
+      )}
 
       {/* Dropdown Menu */}
       {isOpen && (
