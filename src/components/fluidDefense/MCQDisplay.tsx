@@ -14,6 +14,7 @@ interface MCQDisplayProps {
 
 export function MCQDisplay({ chapterId, defense }: MCQDisplayProps) {
   const deleteFluidDefense = useCourseStore((state) => state.deleteFluidDefense)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
@@ -25,7 +26,13 @@ export function MCQDisplay({ chapterId, defense }: MCQDisplayProps) {
   return (
     <>
       <div className="rounded-xl bg-[rgba(255,255,255,0.03)] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_rgba(0,0,0,0.2)]">
-        <div className="p-3 flex items-center gap-2 border-b border-[rgba(255,255,255,0.05)]">
+        <div
+          className={`p-3 flex items-center gap-2 cursor-pointer ${isExpanded ? 'border-b border-[rgba(255,255,255,0.05)]' : ''}`}
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <button className="text-fluid-text-muted">
+            {isExpanded ? <Icons.ChevronDown /> : <Icons.ChevronRight />}
+          </button>
           <span className="text-fluid-purple">
             <Icons.Lightbulb />
           </span>
@@ -33,7 +40,7 @@ export function MCQDisplay({ chapterId, defense }: MCQDisplayProps) {
           <span className="font-medium text-sm flex-1">
             {defense.options.length} Options
           </span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
             <IconButton
               icon={<Icons.Edit />}
               onClick={() => setIsEditing(true)}
@@ -50,24 +57,26 @@ export function MCQDisplay({ chapterId, defense }: MCQDisplayProps) {
             />
           </div>
         </div>
-        <div className="p-3 space-y-2">
-          <div className="font-medium text-sm">{defense.question}</div>
-          {defense.options.map((option, index) => (
-            <div
-              key={index}
-              className={`flex items-start gap-2 text-sm p-2 rounded ${
-                index === defense.correctOptionIndex
-                  ? 'bg-green-500/10 text-green-400'
-                  : 'text-fluid-text-muted'
-              }`}
-            >
-              <span className="text-fluid-text-muted text-xs">{index + 1}</span>
-              <span>{option}</span>
-              {index === defense.correctOptionIndex && (
-                <Icons.Check />
-              )}
-            </div>
-          ))}
+        <div className={`assessment-expandable-content ${isExpanded ? 'expanded' : ''}`}>
+          <div className="p-3 space-y-2">
+            <div className="font-medium text-sm">{defense.question}</div>
+            {defense.options.map((option, index) => (
+              <div
+                key={index}
+                className={`flex items-start gap-2 text-sm p-2 rounded ${
+                  index === defense.correctOptionIndex
+                    ? 'bg-green-500/10 text-green-400'
+                    : 'text-fluid-text-muted'
+                }`}
+              >
+                <span className="text-fluid-text-muted text-xs">{index + 1}</span>
+                <span>{option}</span>
+                {index === defense.correctOptionIndex && (
+                  <Icons.Check />
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

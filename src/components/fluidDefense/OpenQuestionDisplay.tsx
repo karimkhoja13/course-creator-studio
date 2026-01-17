@@ -17,6 +17,7 @@ export function OpenQuestionDisplay({
   defense,
 }: OpenQuestionDisplayProps) {
   const deleteFluidDefense = useCourseStore((state) => state.deleteFluidDefense)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
@@ -28,7 +29,13 @@ export function OpenQuestionDisplay({
   return (
     <>
       <div className="rounded-xl bg-[rgba(255,255,255,0.03)] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_16px_rgba(0,0,0,0.2)]">
-        <div className="p-3 flex items-center gap-2 border-b border-[rgba(255,255,255,0.05)]">
+        <div
+          className={`p-3 flex items-center gap-2 cursor-pointer ${isExpanded ? 'border-b border-[rgba(255,255,255,0.05)]' : ''}`}
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <button className="text-fluid-text-muted">
+            {isExpanded ? <Icons.ChevronDown /> : <Icons.ChevronRight />}
+          </button>
           <span className="text-fluid-cyan">
             <Icons.BookOpen />
           </span>
@@ -36,7 +43,7 @@ export function OpenQuestionDisplay({
           <span className="font-medium text-sm flex-1">
             {defense.evaluationCriteria.length} Criteria
           </span>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
             <IconButton
               icon={<Icons.Edit />}
               onClick={() => setIsEditing(true)}
@@ -53,15 +60,17 @@ export function OpenQuestionDisplay({
             />
           </div>
         </div>
-        <div className="p-3 space-y-2">
-          <div className="font-medium text-sm">{defense.question}</div>
-          <div className="text-xs text-fluid-text-muted">
-            Evaluation Criteria:
-            <ul className="list-disc list-inside mt-1">
-              {defense.evaluationCriteria.map((criteria, index) => (
-                <li key={index}>{criteria}</li>
-              ))}
-            </ul>
+        <div className={`assessment-expandable-content ${isExpanded ? 'expanded' : ''}`}>
+          <div className="p-3 space-y-2">
+            <div className="font-medium text-sm">{defense.question}</div>
+            <div className="text-xs text-fluid-text-muted">
+              Evaluation Criteria:
+              <ul className="list-disc list-inside mt-1">
+                {defense.evaluationCriteria.map((criteria, index) => (
+                  <li key={index}>{criteria}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>

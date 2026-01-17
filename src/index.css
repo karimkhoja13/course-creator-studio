@@ -95,6 +95,42 @@ body {
   overflow: hidden;
 }
 
+/* Unit expandable content animation */
+.unit-expandable-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 400ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.unit-expandable-content.expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.unit-expandable-content > * {
+  overflow: hidden;
+}
+
+/* Assessment expandable content animation */
+.assessment-expandable-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 400ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.assessment-expandable-content.expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.assessment-expandable-content > * {
+  overflow: hidden;
+}
+
 /* ============================================
    Strategy Switching Reference:
    - Strategy A (Always Show): Change smooth-scroll-container to overflow-y: scroll

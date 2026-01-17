@@ -22,10 +22,6 @@ export function ChapterDetailView({ chapter }: ChapterDetailViewProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState(chapter.title)
 
-  // Expandable sections state
-  const [isUnitsExpanded, setIsUnitsExpanded] = useState(true)
-  const [isAssessmentsExpanded, setIsAssessmentsExpanded] = useState(true)
-
   const handleDelete = () => {
     deleteChapter(chapter.id)
     setShowDeleteConfirm(false)
@@ -113,62 +109,32 @@ export function ChapterDetailView({ chapter }: ChapterDetailViewProps) {
       </div>
 
       {/* Units Section */}
-      <div className="rounded-xl bg-[rgba(255,255,255,0.02)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_24px_rgba(0,0,0,0.2)] overflow-hidden">
-        <button
-          onClick={() => setIsUnitsExpanded(!isUnitsExpanded)}
-          className="w-full flex items-center gap-3 p-4 text-left hover:bg-[rgba(255,255,255,0.02)] transition-colors"
-        >
-          {isUnitsExpanded ? (
-            <Icons.ChevronDown className="text-fluid-text-muted" />
-          ) : (
-            <Icons.ChevronRight className="text-fluid-text-muted" />
-          )}
+      <div className="rounded-xl bg-[rgba(255,255,255,0.02)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_24px_rgba(0,0,0,0.2)] p-6">
+        <div className="flex items-center gap-3 mb-4">
           <span className="text-sm font-medium text-fluid-text-primary uppercase tracking-wider">
             Units
           </span>
           <span className="text-xs text-fluid-text-muted">
             ({totalUnits})
           </span>
-        </button>
-
-        <div
-          className={`chapter-expandable-content ${isUnitsExpanded ? 'expanded' : ''}`}
-        >
-          <div className="px-6 pb-6">
-            <UnitList chapterId={chapter.id} units={chapter.units} />
-          </div>
         </div>
+        <UnitList chapterId={chapter.id} units={chapter.units} />
       </div>
 
       {/* Assessments Section */}
-      <div className="rounded-xl bg-[rgba(255,255,255,0.02)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_24px_rgba(0,0,0,0.2)] overflow-hidden">
-        <button
-          onClick={() => setIsAssessmentsExpanded(!isAssessmentsExpanded)}
-          className="w-full flex items-center gap-3 p-4 text-left hover:bg-[rgba(255,255,255,0.02)] transition-colors"
-        >
-          {isAssessmentsExpanded ? (
-            <Icons.ChevronDown className="text-fluid-text-muted" />
-          ) : (
-            <Icons.ChevronRight className="text-fluid-text-muted" />
-          )}
+      <div className="rounded-xl bg-[rgba(255,255,255,0.02)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_4px_24px_rgba(0,0,0,0.2)] p-6">
+        <div className="flex items-center gap-3 mb-4">
           <span className="text-sm font-medium text-fluid-text-primary uppercase tracking-wider">
             Assessments
           </span>
           <span className="text-xs text-fluid-text-muted">
             ({totalAssessments})
           </span>
-        </button>
-
-        <div
-          className={`chapter-expandable-content ${isAssessmentsExpanded ? 'expanded' : ''}`}
-        >
-          <div className="px-6 pb-6">
-            <FluidDefenseSection
-              chapterId={chapter.id}
-              fluidDefense={chapter.fluidDefense}
-            />
-          </div>
         </div>
+        <FluidDefenseSection
+          chapterId={chapter.id}
+          fluidDefense={chapter.fluidDefense}
+        />
       </div>
 
       {/* Edit Modal */}
