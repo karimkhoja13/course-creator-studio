@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Icons } from './components/icons/Icons'
 import { CourseCanvas } from './components/course/CourseCanvas'
+import { ResizeHandle } from './components/ResizeHandle'
 
 // Header Component
 function Header() {
@@ -99,10 +100,32 @@ function FileTreeItem({
 }
 
 // Knowledge Base Sidebar
-function KnowledgeBaseSidebar() {
+function KnowledgeBaseSidebar({
+  isOpen,
+  onToggle,
+  width,
+  onResizeStart,
+  onResize,
+  onResizeEnd,
+  isResizing,
+}: {
+  isOpen: boolean
+  onToggle: () => void
+  width: number
+  onResizeStart: () => void
+  onResize: (newWidth: number) => void
+  onResizeEnd: () => void
+  isResizing: boolean
+}) {
   return (
-    <aside className="w-64 bg-fluid-bg-surface flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.3)]">
-      <div className="p-4 flex items-center justify-between">
+    <aside
+      className={`bg-fluid-bg-surface flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.3)] relative ${
+        isResizing ? '' : 'transition-all duration-300 ease-in-out'
+      }`}
+      style={{ width: isOpen ? `${width}px` : '0px' }}
+    >
+      <div className="overflow-hidden flex flex-col flex-1">
+        <div className="p-4 flex items-center justify-between">
         <span className="text-xs font-semibold text-fluid-text-muted uppercase tracking-wider">
           Knowledge Base
         </span>
@@ -135,22 +158,47 @@ function KnowledgeBaseSidebar() {
         <FileTreeItem name="Legacy_Codebase.pdf" type="pdf" />
       </div>
 
-      <div className="p-4 border-t border-[rgba(255,255,255,0.05)]">
-        <div className="flex items-center justify-between text-xs mb-2">
-          <span className="text-fluid-text-muted uppercase tracking-wider">Storage</span>
-          <span className="text-fluid-cyan">Syncing...</span>
-        </div>
-        <div className="h-1.5 bg-fluid-bg-elevated rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-fluid-cyan to-fluid-purple rounded-full"
-            style={{ width: '24%' }}
-          />
-        </div>
-        <div className="flex justify-between text-xs text-fluid-text-muted mt-1">
-          <span>1.2 GB</span>
-          <span>5 GB</span>
+        <div className="p-4 border-t border-[rgba(255,255,255,0.05)]">
+          <div className="flex items-center justify-between text-xs mb-2">
+            <span className="text-fluid-text-muted uppercase tracking-wider">Storage</span>
+            <span className="text-fluid-cyan">Syncing...</span>
+          </div>
+          <div className="h-1.5 bg-fluid-bg-elevated rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-fluid-cyan to-fluid-purple rounded-full"
+              style={{ width: '24%' }}
+            />
+          </div>
+          <div className="flex justify-between text-xs text-fluid-text-muted mt-1">
+            <span>1.2 GB</span>
+            <span>5 GB</span>
+          </div>
         </div>
       </div>
+
+      {/* Resize Handle */}
+      {isOpen && (
+        <ResizeHandle
+          onResizeStart={onResizeStart}
+          onResize={onResize}
+          onResizeEnd={onResizeEnd}
+          side="right"
+          currentWidth={width}
+          minWidth={200}
+          maxWidth={500}
+        />
+      )}
+
+      {/* Toggle Button */}
+      <button
+        onClick={onToggle}
+        className={`absolute top-1/2 -translate-y-1/2 w-6 h-12 bg-fluid-bg-surface rounded-r-lg shadow-[2px_0_8px_rgba(0,0,0,0.3)] flex items-center justify-center text-fluid-text-muted hover:text-fluid-cyan transition-all duration-200 z-10 ${
+          isOpen ? '-right-3' : 'left-0'
+        }`}
+        aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+      >
+        {isOpen ? <Icons.ChevronLeft /> : <Icons.ChevronRight />}
+      </button>
     </aside>
   )
 }
@@ -158,11 +206,32 @@ function KnowledgeBaseSidebar() {
 // CourseCanvas is now imported from components
 
 // AI Co-Pilot Sidebar
-function AICoPilotSidebar() {
+function AICoPilotSidebar({
+  isOpen,
+  onToggle,
+  width,
+  onResizeStart,
+  onResize,
+  onResizeEnd,
+  isResizing,
+}: {
+  isOpen: boolean
+  onToggle: () => void
+  width: number
+  onResizeStart: () => void
+  onResize: (newWidth: number) => void
+  onResizeEnd: () => void
+  isResizing: boolean
+}) {
   const [inputValue, setInputValue] = useState('')
 
   return (
-    <aside className="w-80 bg-fluid-bg-surface flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.3)]">
+    <aside
+      className={`bg-fluid-bg-surface flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.3)] relative ${
+        isResizing ? '' : 'transition-all duration-300 ease-in-out'
+      }`}
+      style={{ width: isOpen ? `${width}px` : '0px' }}
+    >
       {/* Co-Pilot Header */}
       <div className="p-4 flex items-center gap-3 border-b border-[rgba(255,255,255,0.05)]">
         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center">
@@ -336,19 +405,104 @@ function AICoPilotSidebar() {
           AI can make mistakes. Please review generated content.
         </div>
       </div>
+
+      {/* Resize Handle */}
+      {isOpen && (
+        <ResizeHandle
+          onResizeStart={onResizeStart}
+          onResize={onResize}
+          onResizeEnd={onResizeEnd}
+          side="left"
+          currentWidth={width}
+          minWidth={280}
+          maxWidth={600}
+        />
+      )}
+
+      {/* Toggle Button */}
+      <button
+        onClick={onToggle}
+        className={`absolute top-1/2 -translate-y-1/2 w-6 h-12 bg-fluid-bg-surface rounded-l-lg shadow-[-2px_0_8px_rgba(0,0,0,0.3)] flex items-center justify-center text-fluid-text-muted hover:text-fluid-cyan transition-all duration-200 z-10 ${
+          isOpen ? '-left-3' : 'right-0'
+        }`}
+        aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+      >
+        {isOpen ? <Icons.ChevronRight /> : <Icons.ChevronLeft />}
+      </button>
     </aside>
   )
 }
 
 // Main App Component
 function App() {
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true)
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true)
+
+  // Width state management
+  const [leftSidebarWidth, setLeftSidebarWidth] = useState(256)
+  const [rightSidebarWidth, setRightSidebarWidth] = useState(320)
+
+  // Track if sidebars are being resized (to disable CSS transitions)
+  const [isLeftSidebarResizing, setIsLeftSidebarResizing] = useState(false)
+  const [isRightSidebarResizing, setIsRightSidebarResizing] = useState(false)
+
+  // Toggle functions
+  const toggleLeftSidebar = () => {
+    setIsLeftSidebarOpen(prev => !prev)
+  }
+
+  const toggleRightSidebar = () => {
+    setIsRightSidebarOpen(prev => !prev)
+  }
+
+  // Resize handler functions
+  const handleLeftSidebarResizeStart = () => {
+    setIsLeftSidebarResizing(true)
+  }
+
+  const handleLeftSidebarResize = (newWidth: number) => {
+    setLeftSidebarWidth(newWidth)
+  }
+
+  const handleLeftSidebarResizeEnd = () => {
+    setIsLeftSidebarResizing(false)
+  }
+
+  const handleRightSidebarResizeStart = () => {
+    setIsRightSidebarResizing(true)
+  }
+
+  const handleRightSidebarResize = (newWidth: number) => {
+    setRightSidebarWidth(newWidth)
+  }
+
+  const handleRightSidebarResizeEnd = () => {
+    setIsRightSidebarResizing(false)
+  }
+
   return (
     <div className="h-screen flex flex-col bg-fluid-bg-deep">
       <Header />
       <div className="flex-1 flex overflow-hidden">
-        <KnowledgeBaseSidebar />
+        <KnowledgeBaseSidebar
+          isOpen={isLeftSidebarOpen}
+          onToggle={toggleLeftSidebar}
+          width={leftSidebarWidth}
+          onResizeStart={handleLeftSidebarResizeStart}
+          onResize={handleLeftSidebarResize}
+          onResizeEnd={handleLeftSidebarResizeEnd}
+          isResizing={isLeftSidebarResizing}
+        />
         <CourseCanvas />
-        <AICoPilotSidebar />
+        <AICoPilotSidebar
+          isOpen={isRightSidebarOpen}
+          onToggle={toggleRightSidebar}
+          width={rightSidebarWidth}
+          onResizeStart={handleRightSidebarResizeStart}
+          onResize={handleRightSidebarResize}
+          onResizeEnd={handleRightSidebarResizeEnd}
+          isResizing={isRightSidebarResizing}
+        />
       </div>
     </div>
   )
