@@ -58,7 +58,8 @@ export function MCQDisplay({ chapterId, defense }: MCQDisplayProps) {
           </div>
         </div>
         <div className={`assessment-expandable-content ${isExpanded ? 'expanded' : ''}`}>
-          <div className="p-3 space-y-2">
+          {/* <div className={`space-y-2 ${isExpanded ? 'p-3' : 'p-0'}`}> */}
+          <div className="px-4">
             <div className="font-medium text-sm">{defense.question}</div>
             {defense.options.map((option, index) => (
               <div

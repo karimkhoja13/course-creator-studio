@@ -63,7 +63,8 @@ export function UnitItem({ chapterId, unit }: UnitItemProps) {
 
         {/* Collapsible content */}
         <div className={`unit-expandable-content ${isExpanded ? 'expanded' : ''}`}>
-          <div className="px-4 pb-4">
+          {/* <div className={isExpanded ? 'p-4 pt-0' : 'p-0'}> */}
+          <div className="px-4">
             <DirectiveDisplay directive={unit.directive} />
             {unit.attachments.length > 0 && (
               <div className="mt-4">

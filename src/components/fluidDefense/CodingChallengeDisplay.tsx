@@ -61,7 +61,7 @@ export function CodingChallengeDisplay({
           </div>
         </div>
         <div className={`assessment-expandable-content ${isExpanded ? 'expanded' : ''}`}>
-          <div className="p-3 space-y-2">
+          <div className="px-4">
             <div className="font-medium text-sm">{defense.question}</div>
             <div className="text-xs text-fluid-text-muted">
               Success Criteria: {defense.successCriteria}
